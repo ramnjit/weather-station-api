@@ -9,7 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import func
 
-# Initialize Flask App
+# Initialize Flask App 
 app = Flask(__name__)
 
 # DATABASE CONFIGURATION 

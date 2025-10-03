@@ -28,6 +28,9 @@ jobs:
 
       - name: Build SAM application
         run: sam build
+    
+      - name: Inspect build artifacts
+        run: ls -R .aws-sam/build/
 
       - name: Deploy SAM application
         run: sam deploy --stack-name weather-station-api-stack --no-confirm-changeset --capabilities CAPABILITY_IAM --resolve-s3

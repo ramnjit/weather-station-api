@@ -1,24 +1,48 @@
+# This is the name of the workflow that appears in the GitHub Actions tab.
 name: Deploy Weather Station API
+
+# Defines the trigger for the workflow.
 on:
   push:
-    branches: [main]
+    branches: [main] # runs automatically on every push to the 'main' branch.
+
+# Defines the jobs that will run. Only have one job, called 'deploy'.
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # job will run on a fresh, virtual Linux machine provided by GitHub.
+
+    # These permissions are required for secure, keyless authentication with AWS.
     permissions:
-      id-token: write
-      contents: read
+      id-token: write # Allows the workflow to get a temporary token from GitHub.
+      contents: read # Allows the workflow to check out the repository code.
+
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      # 1. Check out the repository code so the runner can access it.
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Set up the Python environment.
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
           python-version: '3.12'
-      - uses: aws-actions/setup-sam@v2
-      - uses: aws-actions/configure-aws-credentials@v2
+
+      # 3. Set up the AWS SAM CLI.
+      - name: Setup SAM CLI
+        uses: actions/setup-sam@v2
+
+      # 4. Configure AWS credentials using the secure OIDC role.
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
+          # This is the IAM Role that GitHub is trusted to assume.
           role-to-assume: arn:aws:iam::832362088918:role/GitHubActions-WeatherAPI-Role
           aws-region: us-east-1
+
+      # 5. Build the SAM application. Packages the code.
       - name: Build SAM application
-        run: sam build --use-container
+        run: sam build
+
+      # 6. Deploy the built application to AWS CloudFormation.
       - name: Deploy SAM application
         run: sam deploy --stack-name weather-station-api-stack --no-confirm-changeset --capabilities CAPABILITY_IAM --resolve-s3

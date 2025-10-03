@@ -1,20 +1,32 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Weather Station API Demo
+
+# This is where all AWS components are defined.
 Resources:
+  # Defines our AWS Lambda function.
   HelloWorldFunction:
     Type: AWS::Serverless::Function
     Properties:
+      # CodeUri points to the folder containing our Python source code.
       CodeUri: src/
+      # Handler specifies the file and function to run (handler.py -> hello function).
       Handler: handler.hello
+      # Runtime defines which version of Python to use.
       Runtime: python3.12
+      # Events defines what triggers this function.
       Events:
         ApiEvent:
-          Type: Api
+          Type: Api # This specifies an API Gateway trigger.
           Properties:
+            # The URL path for this endpoint.
             Path: /hello
+            # The HTTP method for this endpoint.
             Method: get
+
+# Defines values that will be printed after a successful deployment.
 Outputs:
   ApiUrl:
     Description: "API Gateway endpoint URL"
+    # This constructs and prints the full, live URL of our deployed API.
     Value: !Sub "https://://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello"

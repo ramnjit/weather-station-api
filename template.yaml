@@ -44,8 +44,6 @@ Resources:
             Action:
               - secretsmanager:GetSecretValue
             Resource: "arn:aws:secretsmanager:us-east-1:832362088918:secret:eather-api/db-credentials-VDOHVm"
-    Metadata:
-      BuildMethod: python_pip
 
 Outputs:
   ApiUrl:

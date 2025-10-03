@@ -69,4 +69,4 @@ Resources:
 Outputs:
   ApiUrl:
     Description: "API URL"
-    Value: !Sub "https://://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Value: !Sub "https://://${WeatherStationApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

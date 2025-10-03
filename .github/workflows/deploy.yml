@@ -31,7 +31,7 @@ jobs:
           python-version: '3.11'
 
       - name: Build SAM application
-        run: sam build --use-container
+        run: sam build --use-container --template-file template.yaml
 
       - name: Deploy SAM application
         run: sam deploy --stack-name weather-station-api-stack --resolve-s3 --no-confirm-changeset --capabilities CAPABILITY_IAM

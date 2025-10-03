@@ -3,6 +3,42 @@ Transform: AWS::Serverless-2016-10-31
 Description: Weather Station API
 
 Resources:
+  WeatherStationApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,x-api-key'"
+        AllowOrigin: "'*'"
+
+  AppDependenciesLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: dependencies/
+      CompatibleRuntimes:
+        - python3.12
+
+  WeatherStationFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [lambda.amazonaws.com]
+            Action: ['sts:AssumeRole']
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      Policies:
+        - PolicyName: ReadSecretPolicy
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: ['secretsmanager:GetSecretValue']
+                Resource: "arn:aws:secretsmanager:us-east-1:832362088918:secret:eather-api/db-credentials-VDOHVm"
+
   WeatherStationFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -10,24 +46,25 @@ Resources:
       CodeUri: src/
       Handler: aws_wsgi.handler
       Runtime: python3.12
+      Layers:
+        - !Ref AppDependenciesLayer
+      Role: !GetAtt WeatherStationFunctionRole.Arn
       VpcConfig:
         SecurityGroupIds: [ sg-07c60cec7e5f0e956 ]
         SubnetIds:
           - subnet-050466863802331de
           - subnet-0eb3f2e82007956d2
       Events:
-        ApiEvent:
+        ApiEvents:
           Type: Api
           Properties:
+            RestApiId: !Ref WeatherStationApi
             Path: /{proxy+}
             Method: ANY
       Environment:
         Variables:
           DB_SECRET_ARN: "arn:aws:secretsmanager:us-east-1:832362088918:secret:eather-api/db-credentials-VDOHVm"
-          WSGI_APP: app.app
-      Policies:
-        - AWSLambdaVPCAccessExecutionRole
-        - SecretsManagerReadOnly
+          WSGI_APP: app.app      
 
 Outputs:
   ApiUrl:

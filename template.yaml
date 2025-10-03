@@ -38,6 +38,7 @@ Resources:
       Environment:
         Variables:
           DB_SECRET_ARN: "arn:aws:secretsmanager:us-east-1:832362088918:secret:eather-api/db-credentials-VDOHVm"
+          WSGI_APP: app.app
       Policies:
         - Statement:
           - Effect: Allow

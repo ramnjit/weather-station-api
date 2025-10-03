@@ -34,4 +34,4 @@ jobs:
         run: sam build --use-container
 
       - name: Deploy SAM application
-        run: sam deploy --no-confirm-changeset
+        run: sam deploy --stack-name weather-station-api-stack --no-confirm-changeset --capabilities CAPABILITY_IAM

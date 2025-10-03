@@ -30,6 +30,9 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: List files for debugging
+        run: ls -R
+
       - name: Build SAM application
         run: sam build --use-container --template-file template.yaml
 

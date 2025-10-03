@@ -41,7 +41,7 @@ Resources:
           WSGI_APP: app.app
       Policies:
         - SecretsManagerReadPolicy:
-            SecretArn: "arn:aws:secretsmanager:us-east-1:832362088918:secret:eather-api/db-credentials-VDOHVm"
+            SecretName: "arn:aws:secretsmanager:us-east-1:832362088918:secret:eather-api/db-credentials-VDOHVm"
 
 Outputs:
   ApiUrl:

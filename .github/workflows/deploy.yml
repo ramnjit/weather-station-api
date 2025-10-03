@@ -29,7 +29,7 @@ jobs:
 
       # 3. Set up the AWS SAM CLI.
       - name: Setup SAM CLI
-        uses: actions/setup-sam@v2
+        uses: aws-actions/setup-sam@v2
 
       # 4. Configure AWS credentials using the secure OIDC role.
       - name: Configure AWS Credentials

@@ -23,7 +23,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       PackageType: Zip
-      CodeUri: .
+      CodeUri: src/
       Handler: aws_wsgi.handler
       Runtime: python3.11
       Architectures:

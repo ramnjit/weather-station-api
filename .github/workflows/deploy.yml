@@ -20,15 +20,12 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies into source folder
-        run: pip install -r requirements.txt -t src/
-
       - uses: aws-actions/setup-sam@v2
       - uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::832362088918:role/GitHubActions-WeatherAPI-Role
           aws-region: us-east-1
-      
+
       - name: Build SAM application
         run: sam build
 

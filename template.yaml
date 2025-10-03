@@ -1,24 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: A simple API to ingest and retrieve weather station data.
+Description: Weather Station API
 
 Resources:
-  WeatherStationApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: Prod
-      Cors:
-        AllowMethods: "'GET,POST,OPTIONS'"
-        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,x-api-key'"
-        AllowOrigin: "'*'"
-
-  AppDependenciesLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      ContentUri: dependencies/
-      CompatibleRuntimes:
-        - python3.12
-
   WeatherStationFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -26,20 +10,15 @@ Resources:
       CodeUri: src/
       Handler: aws_wsgi.handler
       Runtime: python3.12
-      Layers:
-        - !Ref AppDependenciesLayer
-
       VpcConfig:
-        SecurityGroupIds:
-          - sg-07c60cec7e5f0e956
+        SecurityGroupIds: [ sg-07c60cec7e5f0e956 ]
         SubnetIds:
           - subnet-050466863802331de
           - subnet-0eb3f2e82007956d2
       Events:
-        ApiEvents:
+        ApiEvent:
           Type: Api
           Properties:
-            RestApiId: !Ref WeatherStationApi
             Path: /{proxy+}
             Method: ANY
       Environment:
@@ -48,13 +27,10 @@ Resources:
           WSGI_APP: app.app
       Policies:
         - AWSLambdaVPCAccessExecutionRole
-        - Statement:
-          - Effect: Allow
-            Action:
-              - secretsmanager:GetSecretValue
-            Resource: "arn:aws:secretsmanager:us-east-1:832362088918:secret:eather-api/db-credentials-VDOHVm"
+        - SecretsManagerReadPolicy:
+            SecretName: "arn:aws:secretsmanager:us-east-1:832362088918:secret:eather-api/db-credentials-VDOHVm"
 
 Outputs:
   ApiUrl:
-    Description: "API Gateway endpoint URL"
-    Value: !Sub "https://://${WeatherStationApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Description: "API URL"
+    Value: !Sub "https://://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

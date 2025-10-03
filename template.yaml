@@ -27,8 +27,7 @@ Resources:
           WSGI_APP: app.app
       Policies:
         - AWSLambdaVPCAccessExecutionRole
-        - SecretsManagerReadPolicy:
-            SecretName: "arn:aws:secretsmanager:us-east-1:832362088918:secret:eather-api/db-credentials-VDOHVm"
+        - SecretsManagerReadOnly
 
 Outputs:
   ApiUrl:

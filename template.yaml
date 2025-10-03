@@ -3,6 +3,15 @@ Transform: AWS::Serverless-2016-10-31
 Description: Weather Station API
 
 Resources:
+  WeatherStationApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,x-api-key'"
+        AllowOrigin: "'*'"
+
   WeatherStationFunctionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -36,9 +45,10 @@ Resources:
           - subnet-050466863802331de
           - subnet-0eb3f2e82007956d2
       Events:
-        ApiEvent:
+        ApiEvents:
           Type: Api
           Properties:
+            RestApiId: !Ref WeatherStationApi
             Path: /{proxy+}
             Method: ANY
       Environment:
@@ -49,4 +59,4 @@ Resources:
 Outputs:
   ApiUrl:
     Description: "API URL"
-    Value: !Sub "https://://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Value: !Sub "https://://${WeatherStationApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

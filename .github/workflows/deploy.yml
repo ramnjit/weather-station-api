@@ -1,36 +1,24 @@
 name: Deploy Weather Station API
-
 on:
   push:
-    branches:
-      - main
-
+    branches: [main]
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
-
     steps:
       - uses: actions/checkout@v3
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.12'
-
-      - name: Install dependencies into src folder
-        run: pip install -r src/requirements.txt -t src/
-
       - uses: aws-actions/setup-sam@v2
       - uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::832362088918:role/GitHubActions-WeatherAPI-Role
           aws-region: us-east-1
-      
       - name: Build SAM application
-        run: sam build
-
+        run: sam build --use-container
       - name: Deploy SAM application
         run: sam deploy --stack-name weather-station-api-stack --no-confirm-changeset --capabilities CAPABILITY_IAM --resolve-s3

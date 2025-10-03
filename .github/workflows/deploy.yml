@@ -3,13 +3,13 @@ name: Deploy Weather Station API
 on:
   push:
     branches:
-      - main # This workflow runs on pushes to the 'main' branch
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write # Required for AWS authentication
+      id-token: write
       contents: read
 
     steps:
@@ -19,7 +19,6 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          # Use the same role we created for the bug tracker project
           role-to-assume: arn:aws:iam::832362088918:role/GitHubActions-WeatherAPI-Role
           aws-region: us-east-1
 

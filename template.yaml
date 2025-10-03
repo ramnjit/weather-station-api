@@ -17,7 +17,7 @@ Resources:
       Cors:
         AllowMethods: "'GET,POST,OPTIONS'"
         AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,x-api-key'"
-        AllowOrigin: "'*'" # We'll keep this open for now
+        AllowOrigin: "'*'"
 
   WeatherStationFunction:
     Type: AWS::Serverless::Function
@@ -28,8 +28,6 @@ Resources:
       Runtime: python3.11
       Architectures:
         - x86_64
-      Metadata:
-        BuildMethod: python_pip
       Events:
         ApiEvents:
           Type: Api
@@ -46,6 +44,8 @@ Resources:
             Action:
               - secretsmanager:GetSecretValue
             Resource: "arn:aws:secretsmanager:us-east-1:832362088918:secret:eather-api/db-credentials-VDOHVm"
+      Metadata:
+        BuildMethod: python_pip
 
 Outputs:
   ApiUrl:

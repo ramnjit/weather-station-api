@@ -17,7 +17,7 @@ Resources:
     Properties:
       ContentUri: dependencies/
       CompatibleRuntimes:
-        - python3.11
+        - python3.12
 
   WeatherStationFunction:
     Type: AWS::Serverless::Function
@@ -25,7 +25,7 @@ Resources:
       PackageType: Zip
       CodeUri: src/
       Handler: aws_wsgi.handler
-      Runtime: python3.11
+      Runtime: python3.12
       Layers:
         - !Ref AppDependenciesLayer
 

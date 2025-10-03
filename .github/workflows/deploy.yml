@@ -1,0 +1,38 @@
+name: Deploy Weather Station API
+
+on:
+  push:
+    branches:
+      - main # This workflow runs on pushes to the 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for AWS authentication
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          # Use the same role we created for the bug tracker project
+          role-to-assume: arn:aws:iam::832362088918:role/GitHubActions-WeatherAPI-Role
+          aws-region: us-east-1
+
+      - name: Setup SAM CLI
+        uses: aws-actions/setup-sam@v2
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Build SAM application
+        run: sam build --use-container
+
+      - name: Deploy SAM application
+        run: sam deploy --no-confirm-changeset

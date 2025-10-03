@@ -21,7 +21,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies into src folder
-        run: pip install -r requirements.txt -t src/
+        run: pip install -r src/requirements.txt -t src/
 
       - uses: aws-actions/setup-sam@v2
       - uses: aws-actions/configure-aws-credentials@v2

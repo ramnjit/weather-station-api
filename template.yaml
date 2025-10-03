@@ -18,8 +18,6 @@ Resources:
       ContentUri: dependencies/
       CompatibleRuntimes:
         - python3.11
-    Metadata:
-      BuildMethod: python_pip
 
   WeatherStationFunction:
     Type: AWS::Serverless::Function

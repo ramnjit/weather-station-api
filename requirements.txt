@@ -1,0 +1,6 @@
+Flask
+Flask-SQLAlchemy
+psycopg2-binary
+bcrypt
+python-dotenv
+aws-wsgi

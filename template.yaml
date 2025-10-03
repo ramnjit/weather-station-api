@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  weather-station-api
+
+  A simple API to ingest and retrieve weather station data.
+
+Globals:
+  Function:
+    Timeout: 30
+
+Resources:
+  WeatherStationApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,x-api-key'"
+        AllowOrigin: "'*'" # We'll keep this open for now
+
+  WeatherStationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Zip
+      CodeUri: .
+      Handler: aws_wsgi.handler
+      Runtime: python3.11
+      Architectures:
+        - x86_64
+      Metadata:
+        BuildMethod: python_pip
+      Events:
+        ApiEvents:
+          Type: Api
+          Properties:
+            RestApiId: !Ref WeatherStationApi
+            Path: /{proxy+}
+            Method: ANY
+      Environment:
+        Variables:
+          DB_SECRET_ARN: "arn:aws:secretsmanager:us-east-1:832362088918:secret:eather-api/db-credentials-VDOHVm"
+      Policies:
+        - Statement:
+          - Effect: Allow
+            Action:
+              - secretsmanager:GetSecretValue
+            Resource: "arn:aws:secretsmanager:us-east-1:832362088918:secret:eather-api/db-credentials-VDOHVm"
+
+Outputs:
+  ApiUrl:
+    Description: "API Gateway endpoint URL"
+    Value: !Sub "https://://${WeatherStationApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

@@ -30,9 +30,6 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: List files for debugging
-        run: ls -R
-
       - name: Build SAM application
         run: sam build --template-file template.yaml --build-dir .aws-sam/build
 
